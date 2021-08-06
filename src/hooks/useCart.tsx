@@ -23,20 +23,42 @@ const CartContext = createContext<CartContextData>({} as CartContextData);
 
 export function CartProvider({ children }: CartProviderProps): JSX.Element {
   const [cart, setCart] = useState<Product[]>(() => {
-    // const storagedCart = Buscar dados do localStorage
+    const storagedCart = localStorage.getItem('@RocketShoes:cart');
 
-    // if (storagedCart) {
-    //   return JSON.parse(storagedCart);
-    // }
+    if (storagedCart) {
+      return JSON.parse(storagedCart);
+    }
 
     return [];
   });
 
   const addProduct = async (productId: number) => {
     try {
-      // TODO
-    } catch {
-      // TODO
+      const stockPromise = api.get(`/stock/${productId}`);
+      const productPromise = api.get(`/products/${productId}`);
+
+      const responses = await Promise.all([stockPromise, productPromise]);
+
+      const stock = responses[0].data;
+      const product = responses[1].data;
+
+      if (cart.some(p => p.id === productId)) {
+        const productInCart = cart.find(p => p.id === productId);
+        if (!productInCart) return;
+
+        if (productInCart.amount < stock.amount) {
+          productInCart.amount += 1;
+          updateProductAmount({ productId, amount: (productInCart.amount ?? 0) });
+        } else {
+          throw new Error('Quantidade solicitada fora de estoque');
+        }
+      } else {
+        product.amount = 1;
+        setCart(cart.concat([product]));
+        localStorage.setItem('@RocketShoes:cart', JSON.stringify(cart));
+      }
+    } catch (err) {
+      toast.error(err.message);
     }
   };
 
@@ -53,9 +75,21 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
     amount,
   }: UpdateProductAmount) => {
     try {
-      // TODO
-    } catch {
-      // TODO
+      const product = cart.find(p => p.id === productId);
+
+      if (!product) return;
+
+      setCart(cart.map(p => {
+        if (p.id === productId) {
+          p.amount = amount;
+        }
+
+        return p;
+      }));
+
+      localStorage.setItem('@RocketShoes:cart', JSON.stringify(cart));
+    } catch (err) {
+      toast.error(err.message);
     }
   };
 

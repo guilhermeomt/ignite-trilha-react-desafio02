@@ -23,7 +23,7 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "cross-env PORT=3300 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -47,11 +47,15 @@
     "@types/react-router-dom": "^5.1.7",
     "@types/styled-components": "^5.1.7",
     "axios-mock-adapter": "^1.19.0",
+    "cross-env": "^7.0.3",
     "json-server": "^0.16.3"
   },
   "eslintConfig": {
     "extends": [
       "react-app"
-    ]
+    ],
+    "rules": {
+      "@typescript-eslint/no-unused-vars": "off"
+    }
   }
 }
