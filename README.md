@@ -7,7 +7,7 @@ Para solucionar o desafio, foi necessário implementar um hook [```useCart```](s
 - O produto não pode ser adicionado caso a quantidade no carrinho ultrapasse a quantidade existente desse produto no estoque (Obs.: A quantidade do estoque é obtida através de uma chamada à API)
 - Se o produto já não está no carrinho deve-se incrementá-lo e, caso não esteja, adicioná-lo
 
- Vale ressaltar que dentro do hook [```useCart```](src/hookss/useCart.tsx) está o contexto ```CartContext```, que, por sua vez, possui o intuito de compartilhar os estados e funções referentes ao carrinho entre todos os componentes da aplicação.
+Vale ressaltar que dentro do hook [```useCart```](src/hooks/useCart.tsx) está o contexto ```CartContext```, que, por sua vez, possui o intuito de compartilhar os estados e funções referentes ao carrinho entre todos os componentes da aplicação.
 
 Com o hook pronto, bastou implementar o código dos componentes e das páginas associados ao uso do [```useCart```](src/hooks/useCart.tsx).
 
